@@ -119,6 +119,27 @@ has no non-⊥ values, such as in
     absurd :: Void -> a
     absurd x = case x of {}
 
+Case matching on empty data types should be strict in the scrutinee. Consider
+
+.. code-block:: haskell
+
+    v :: Void
+    v = error "Void evaluated!"
+
+    x = case v of {}
+
+If the `case` is strict, then we’ll get the `error` message. Otherwise the
+compiler might generate an unhelpful incomplete pattern match warning. Thus, the
+semantics of pattern matching values of empty types should be
+
+.. code-block:: haskell
+
+    case v of {}
+      = v
+      -- if v is of empty type
+
+
+
 
 #########
 Drawbacks
