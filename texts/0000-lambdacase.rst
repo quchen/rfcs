@@ -95,6 +95,10 @@ Haskell, it cannot be used as a variable name. Therefore, in standard Haskell,
 ``\case`` is invalid. Thus, this proposal gives meaning to a previously
 non-existing construct, resulting in no breakage.
 
+Feature-wise, it is worth noting that lambda case does not support lambdas with
+multiple arguments well. In this case, explicitly naming the `case` scrutinee,
+as is current (standard Haskell) practice, explicitly.
+
 
 
 ############
