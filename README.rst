@@ -70,8 +70,8 @@ Proposal process
 3. Fill in the template with your suggestion. Make sure the proposal is as
    well-written as you’d expect the final version of it to be; do not submit
    drafts with essential parts left out for discussion.
-4. File a pull request to this repo. *(Do not rebase after this! You’re now
-   live.)*
+4. File a pull request to this repo. Include a link to the rendered version of
+   your proposal to the text to make things easier to read for others.
 5. The request will be discussed in the comment thread of the pull request, if
    possible. A Core Language Committee member will be pronounced the *Shepherd*,
    and that member is responsible for guiding through the process, making sure
