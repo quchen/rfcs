@@ -123,6 +123,9 @@ Report:
        (>>=) :: m a -> (a -> m b) -> m b
        m >>= f = join (fmap f m)
 
+       join :: m (m a) -> m a
+       join = (>>= id)
+
        (>>) :: m a -> m b -> m b
        (>>) = (*>)
 
