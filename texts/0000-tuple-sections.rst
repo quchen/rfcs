@@ -63,6 +63,19 @@ to mean
     \x y z w -> (x, "'tis", y, z, w, Just 'a', "scratch")
 
 
+The grammar for tuple syntax simply gets optional fields; it currently reads
+
+.. code-block::
+
+    aexp    → (exp1 , … , expk)  (k ≥ 2)
+
+which would then become
+
+.. code-block::
+
+    aexp    → ([exp1] , … , [expk])  (k ≥ 2)
+
+
 
 #########
 Drawbacks
