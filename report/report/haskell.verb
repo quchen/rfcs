@@ -472,6 +472,7 @@ that it does not claim to be a definition of the language Haskell 2010.
 \part{The Haskell 2010 Libraries}
 \label{libraries}
 
+\input{libs/Control-Applicative}
 \input{libs/Control-Monad}
 \input{libs/Data-Array}
 \input{libs/Data-Bits}

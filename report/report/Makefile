@@ -69,6 +69,7 @@ LIB_MODULES = Data.Array \
 	Data.Ix \
 	Data.List \
 	Data.Maybe \
+	Control.Applicative \
 	Control.Monad \
 	Data.Ratio \
 	Numeric \

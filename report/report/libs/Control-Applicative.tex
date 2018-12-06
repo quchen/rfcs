@@ -1,0 +1,141 @@
+\haddockmoduleheading{Control.Applicative}
+\label{module:Control.Applicative}
+\haddockbeginheader
+{\haddockverb\begin{verbatim}
+module Control.Applicative (
+    Applicative(pure, (<*>), (*>), (<*), liftA2), 
+    Alternative((<|>), empty, some, many),  (<**>),  liftA,  liftA3,  optional
+  ) where\end{verbatim}}
+\haddockendheader
+
+\begin{haddockdesc}
+\item[\begin{tabular}{@{}l}
+class\ Functor\ f\ =>\ Applicative\ f\ where
+\end{tabular}]\haddockbegindoc
+A functor with application, providing operations to\par
+\begin{itemize}
+\item
+embed pure expressions (\haddockid{pure}), and\par
+
+\item
+sequence computations and combine their results (\haddockid{<*>} and \haddockid{liftA2}).\par
+
+\end{itemize}
+A minimal complete definition must include implementations of \haddockid{pure}
+ and of either \haddockid{<*>} or \haddockid{liftA2}. If it defines both, then they must behave
+ the same as their default definitions:\par
+\haddocktt{(<*>)\ =\ liftA2\ id}
+      \haddocktt{liftA2\ f\ x\ y\ =\ fmap\ f\ x\ <*>\ y}\par
+Further, any definition must satisfy the following:\par
+\begin{description}
+\item[\emph{identity}] \begin{quote}
+                       {\haddockverb\begin{verbatim}
+                       pure id <*> v = v\end{verbatim}}
+                       \end{quote}
+                       
+\item[\emph{composition}] \begin{quote}
+                          {\haddockverb\begin{verbatim}
+                          pure (.) <*> u <*> v <*> w = u <*> (v <*> w)\end{verbatim}}
+                          \end{quote}
+                          
+\item[\emph{homomorphism}] \begin{quote}
+                           {\haddockverb\begin{verbatim}
+                           pure f <*> pure x = pure (f x)\end{verbatim}}
+                           \end{quote}
+                           
+\item[\emph{interchange}] \begin{quote}
+                          {\haddockverb\begin{verbatim}
+                          u <*> pure y = pure ({\char '44} y) <*> u\end{verbatim}}
+                          \end{quote}
+                          
+\end{description}The other methods have the following default definitions, which may
+ be overridden with equivalent specialized implementations:\par
+                 \begin{itemize}
+                 \item
+                 \begin{quote}
+                 {\haddockverb\begin{verbatim}
+                 u *> v = liftA2 (flip const) u v\end{verbatim}}
+                 \end{quote}
+                 
+                 \item
+                 \begin{quote}
+                 {\haddockverb\begin{verbatim}
+                 u <* v = liftA2 const u v\end{verbatim}}
+                 \end{quote}
+                 
+                 \end{itemize}
+                 As a consequence of these laws, the \haddockid{Functor} instance for \haddocktt{f} will satisfy\par
+                 \begin{itemize}
+                 \item
+                 \begin{quote}
+                 {\haddockverb\begin{verbatim}
+                 fmap f x = pure f <*> x\end{verbatim}}
+                 \end{quote}
+                 
+                 \end{itemize}
+                 
+\haddockpremethods{}\textbf{Methods}
+\end{haddockdesc}
+\begin{haddockdesc}
+\item[\begin{tabular}{@{}l}
+instance\ Applicative\ {\char 91}{\char 93}\\instance\ Applicative\ Maybe\\instance\ Applicative\ IO
+\end{tabular}]
+\end{haddockdesc}
+\begin{haddockdesc}
+\item[\begin{tabular}{@{}l}
+class\ Applicative\ f\ =>\ Alternative\ f\ where
+\end{tabular}]\haddockbegindoc
+A monoid on applicative functors.\par
+If defined, \haddockid{some} and \haddockid{many} should be the least solutions
+ of the equations:\par
+\begin{itemize}
+\item
+\begin{quote}
+{\haddockverb\begin{verbatim}
+some v = fmap (:) v <*> many v\end{verbatim}}
+\end{quote}
+
+\item
+\begin{quote}
+{\haddockverb\begin{verbatim}
+many v = some v <|> pure []\end{verbatim}}
+\end{quote}
+
+\end{itemize}
+
+\haddockpremethods{}\textbf{Methods}
+\end{haddockdesc}
+\begin{haddockdesc}
+\item[\begin{tabular}{@{}l}
+instance\ Alternative\ {\char 91}{\char 93}\\instance\ Alternative\ Maybe
+\end{tabular}]
+\end{haddockdesc}
+\begin{haddockdesc}
+\item[\begin{tabular}{@{}l}
+(<**>)\ ::\ Applicative\ f\ =>\ f\ a\ ->\ f\ (a\ ->\ b)\ ->\ f\ b
+\end{tabular}]\haddockbegindoc
+A variant of \haddockid{<*>} with the arguments reversed.\par
+
+\end{haddockdesc}
+\begin{haddockdesc}
+\item[\begin{tabular}{@{}l}
+liftA\ ::\ Applicative\ f\ =>\ (a\ ->\ b)\ ->\ f\ a\ ->\ f\ b
+\end{tabular}]\haddockbegindoc
+Lift a function to actions.
+ This function may be used as a value for \haddockid{fmap} in a \haddockid{Functor} instance.\par
+
+\end{haddockdesc}
+\begin{haddockdesc}
+\item[\begin{tabular}{@{}l}
+liftA3\ ::\ Applicative\ f\ =>\\\ \ \ \ \ \ \ \ \ \ (a\ ->\ b\ ->\ c\ ->\ d)\ ->\ f\ a\ ->\ f\ b\ ->\ f\ c\ ->\ f\ d
+\end{tabular}]\haddockbegindoc
+Lift a ternary function to actions.\par
+
+\end{haddockdesc}
+\begin{haddockdesc}
+\item[\begin{tabular}{@{}l}
+optional\ ::\ Alternative\ f\ =>\ f\ a\ ->\ f\ (Maybe\ a)
+\end{tabular}]\haddockbegindoc
+One or none.\par
+
+\end{haddockdesc}
