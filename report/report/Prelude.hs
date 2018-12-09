@@ -29,8 +29,9 @@ module Prelude (
     RealFloat(floatRadix, floatDigits, floatRange, decodeFloat,
               encodeFloat, exponent, significand, scaleFloat, isNaN,
               isInfinite, isDenormalized, isIEEE, isNegativeZero, atan2),
-    Monad((>>=), (>>), return, fail),
     Functor(fmap),
+    Applicative(pure, liftA2, (<*>), (<*), (*>)),
+    Monad((>>=), (>>), return, fail),
     mapM, mapM_, sequence, sequence_, (=<<), 
     maybe, either,
     (&&), (||), not, otherwise,
@@ -295,7 +296,20 @@ realToFrac      =  fromRational . toRational
 class  Functor f  where
     fmap              :: (a -> b) -> f a -> f b
 
-class  Monad m  where
+class  Functor f => Applicative f  where
+    pure   :: a -> f a
+    liftA2 :: (a -> b -> c) -> f a -> f b -> f c
+    (<*>)  :: f (a -> b) -> f a -> f b
+    (*>)   :: f a -> f b -> f b
+    (<*)   :: f a -> f b -> f a
+
+        -- Minimal complete definition:
+        --     pure, (<*>) or liftA2
+    (<*>)   = liftA2 id
+    (<*)    = liftA2 const
+    (*>)    = liftA2 (flip const)
+
+class  Applicative m => Monad m  where
     (>>=)  :: m a -> (a -> m b) -> m b
     (>>)   :: m a -> m b -> m b
     return :: a -> m a
@@ -415,7 +429,12 @@ maybe n f (Just x) =  f x
 instance  Functor Maybe  where
     fmap f Nothing    =  Nothing
     fmap f (Just x)   =  Just (f x)
-        
+
+instance Applicative Maybe where
+    pure = Just
+    Just f  <*> m    = fmap f m
+    Nothing <*> m    = Nothing
+
 instance  Monad Maybe  where
     (Just x) >>= k   =  k x
     Nothing  >>= k   =  Nothing
@@ -436,6 +455,10 @@ data IO a = ... 	-- abstract
 
 instance  Functor IO where
    fmap f x           =  x >>= (return . f)
+
+instance Applicative IO where
+   pure   = ...
+   liftA2 = ...
 
 instance Monad IO where
    (>>=)  = ...
@@ -535,6 +558,10 @@ data  [a]  =  [] | a : [a]  deriving (Eq, Ord)
 
 instance Functor [] where
     fmap = map
+
+instance Applicative [] where
+    pure x    = [x]
+    fs <*> xs = [f x | f <- fs, x <- xs]
 
 instance  Monad []  where
     m >>= k          = concat (map k m)
