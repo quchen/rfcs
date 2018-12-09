@@ -3,11 +3,45 @@
 \haddockbeginheader
 {\haddockverb\begin{verbatim}
 module Control.Applicative (
-    Applicative(pure, (<*>), (*>), (<*), liftA2), 
+    Functor(fmap),  Applicative(pure, (<*>), (*>), (<*), liftA2), 
     Alternative((<|>), empty, some, many),  (<**>),  liftA,  liftA3,  optional
   ) where\end{verbatim}}
 \haddockendheader
 
+\section{Functor class
+}
+\begin{haddockdesc}
+\item[\begin{tabular}{@{}l}
+class\ Functor\ f\ where
+\end{tabular}]\haddockbegindoc
+The \haddockid{Functor} class is used for types that can be mapped over.
+Instances of \haddockid{Functor} should satisfy the following laws:
+\par
+\begin{quote}
+{\haddockverb\begin{verbatim}
+ fmap id  ==  id
+ fmap (f . g)  ==  fmap f . fmap g
+\end{verbatim}}
+\end{quote}
+The instances of \haddockid{Functor} for lists, \haddocktt{Data.Maybe.Maybe} and \haddocktt{System.IO.IO}
+satisfy these laws.
+\par
+
+\haddockpremethods{}\textbf{Methods}
+\begin{haddockdesc}
+\item[\begin{tabular}{@{}l}
+fmap\ ::\ (a\ ->\ b)\ ->\ f\ a\ ->\ f\ b
+\end{tabular}]
+\end{haddockdesc}
+\end{haddockdesc}
+\begin{haddockdesc}
+\item[\begin{tabular}{@{}l}
+instance\ Functor\ {\char 91}{\char 93}\\instance\ Functor\ IO\\instance\ Functor\ Maybe\\instance\ Ix\ i\ =>\ Functor\ (Array\ i)
+\end{tabular}]
+\end{haddockdesc}
+
+\section{Applicative class
+}
 \begin{haddockdesc}
 \item[\begin{tabular}{@{}l}
 class\ Functor\ f\ =>\ Applicative\ f\ where
@@ -81,6 +115,11 @@ Further, any definition must satisfy the following:\par
 instance\ Applicative\ {\char 91}{\char 93}\\instance\ Applicative\ Maybe\\instance\ Applicative\ IO
 \end{tabular}]
 \end{haddockdesc}
+
+
+\section{Alternative class
+}
+
 \begin{haddockdesc}
 \item[\begin{tabular}{@{}l}
 class\ Applicative\ f\ =>\ Alternative\ f\ where
@@ -110,6 +149,9 @@ many v = some v <|> pure []\end{verbatim}}
 instance\ Alternative\ {\char 91}{\char 93}\\instance\ Alternative\ Maybe
 \end{tabular}]
 \end{haddockdesc}
+
+\section{Functions
+}
 \begin{haddockdesc}
 \item[\begin{tabular}{@{}l}
 (<**>)\ ::\ Applicative\ f\ =>\ f\ a\ ->\ f\ (a\ ->\ b)\ ->\ f\ b
