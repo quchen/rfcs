@@ -108,7 +108,7 @@ two convenient
 syntaxes for special kinds of lists, are described in
 Sections~\ref{arithmetic-sequences} and \ref{list-comprehensions},
 respectively.  Lists are an instance of classes @Read@, @Show@, @Eq@, @Ord@, 
-@Monad@, @Functor@, and @MonadPlus@.
+@Functor@, @Applicative@, @Monad@, and @MonadPlus@.
 
 \subsubsection{Tuples}
 \label{basic-tuples}
@@ -168,8 +168,8 @@ functional values.  The following simple functions are found in the Prelude:
 \subsubsection{The IO and IOError Types}
 The @IO@ type serves as a tag for operations (actions) that interact
 with the outside world.  The @IO@ type is abstract: no constructors are
-visible to the user.  @IO@ is an instance of the @Monad@ and @Functor@
-classes.  Chapter~\ref{io} describes I/O operations.
+visible to the user.  @IO@ is an instance of the @Functor@, @Applicative@,
+and @Monad@ classes.  Chapter~\ref{io} describes I/O operations.
 
 @IOError@ is an abstract type representing errors raised by I/O
 operations.  It is an instance of @Show@ and @Eq@.  Values of this type
@@ -203,10 +203,10 @@ data  Ordering    =  LT | EQ | GT deriving
 \indextt{either}
 \eprog
 }
-The @Maybe@ type is an instance of classes @Functor@, @Monad@,
-and @MonadPlus@.  The @Ordering@ type is used by @compare@
-in the class @Ord@. The functions @maybe@ and @either@ are found in
-the Prelude.
+The @Maybe@ type is an instance of classes @Functor@, @Applicative@,
+@Alternative@, @Monad@, and @MonadPlus@.  The @Ordering@ type is used
+by @compare@ in the class @Ord@. The functions @maybe@ and @either@ are
+found in the Prelude.
 
 \subsection{Strict Evaluation}
 \label{strict-eval}
@@ -574,6 +574,45 @@ Instances of @Functor@ should satisfy the following laws:
 All instances of @Functor@ defined in the Prelude satisfy these laws.
 
 
+\subsubsection{The Applicative Class}
+\indexclass{Applicative}
+\indextt{pure}
+\indextt{liftA2}
+\indextt{<*>}
+\indextt{<*}
+\indextt{*>}
+
+\bprog
+@
+class  Functor f => Applicative f  where
+    pure   :: a -> f a
+    liftA2 :: (a -> b -> c) -> f a -> f b -> f c
+    (<*>)  :: f (a -> b) -> f a -> f b
+    (*>)   :: f a -> f b -> f b
+    (<*)   :: f a -> f b -> f a
+
+        -- Minimal complete definition:
+        --     pure, and (<*>) or liftA2
+    (<*>)   = liftA2 id
+    (<*)    = liftA2 const
+    (*>)    = liftA2 (flip const)
+@
+\eprog
+The @Applicative@
+class is a generalization of @Functor@ for types that admit mapping
+with functions of multiple arguments.  Lists, @IO@, and
+@Maybe@ are in this class.
+
+Instances of @Applicative@ should satisfy the following laws:
+\[\ba{lcl}
+@pure id <*> v@&=&@v@\\
+@pure (.) <*> u <*> v <*> w@&=&@u <*> (v <*> w)@\\
+@pure f <*> pure x@&=&@pure (f x)@\\
+@u <*> pure y@&=&@pure ($ y) <*> u@\\
+\ea\]\ifhtml{\\}{}
+All instances of @Applicative@ defined in the Prelude satisfy these laws.
+
+
 \subsubsection{The Monad Class}
 \label{monad-class}
 \indexclass{Monad}
@@ -584,7 +623,7 @@ All instances of @Functor@ defined in the Prelude satisfy these laws.
 \index{monad}
 \bprog
 @
-class  Monad m  where
+class  Applicative m => Monad m  where
     (>>=)   :: m a -> (a -> m b) -> m b
     (>>)    :: m a -> m b -> m b
     return  :: a -> m a
@@ -613,9 +652,6 @@ Instances of @Monad@ should satisfy the following laws:
 @return a >>= k@&=&@k a@ \\
 @m >>= return@&=&@m@ \\
 @m >>= (\x -> k x >>= h)@&=&@(m >>= k) >>= h@\\
-\ea\]\ifhtml{\\}{}
-Instances of both @Monad@ and @Functor@ should additionally satisfy the law:
-\[\ba{lcl}
 @fmap f xs@&=&@xs >>= return . f@\\
 \ea\]\ifhtml{\\}{}
 All instances of @Monad@ defined in the Prelude satisfy these laws.

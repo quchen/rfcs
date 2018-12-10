@@ -37,12 +37,6 @@ Instances of \haddockid{Monad} should satisfy the following laws:
  return a >>= k  ==  k a
  m >>= return  ==  m
  m >>= (\x -> k x >>= h)  ==  (m >>= k) >>= h
-\end{verbatim}}
-\end{quote}
-Instances of both \haddockid{Monad} and \haddockid{Functor} should additionally satisfy the law:
-\par
-\begin{quote}
-{\haddockverb\begin{verbatim}
  fmap f xs  ==  xs >>= return . f
 \end{verbatim}}
 \end{quote}
