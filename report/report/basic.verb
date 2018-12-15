@@ -108,7 +108,7 @@ two convenient
 syntaxes for special kinds of lists, are described in
 Sections~\ref{arithmetic-sequences} and \ref{list-comprehensions},
 respectively.  Lists are an instance of classes @Read@, @Show@, @Eq@, @Ord@, 
-@Functor@, @Applicative@, @Monad@, and @MonadPlus@.
+@Functor@, @Applicative@, @Alternative@, @Monad@, and @MonadPlus@.
 
 \subsubsection{Tuples}
 \label{basic-tuples}
@@ -599,8 +599,8 @@ class  Functor f => Applicative f  where
 @
 \eprog
 The @Applicative@
-class is a generalization of @Functor@ for types that admit mapping
-with functions of multiple arguments.  Lists, @IO@, and
+class is a specialization of @Functor@ for types that admit mapping
+by functions with arbitrary number of arguments.  Lists, @IO@, and
 @Maybe@ are in this class.
 
 Instances of @Applicative@ should satisfy the following laws:
@@ -649,6 +649,7 @@ exception in the IO monad (see Section~\ref{io-exceptions}).
 
 Instances of @Monad@ should satisfy the following laws:
 \[\ba{lcl}
+@return a@&=&@pure a@ \\
 @return a >>= k@&=&@k a@ \\
 @m >>= return@&=&@m@ \\
 @m >>= (\x -> k x >>= h)@&=&@(m >>= k) >>= h@\\

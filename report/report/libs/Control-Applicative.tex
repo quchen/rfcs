@@ -59,30 +59,36 @@ A minimal complete definition must include implementations of \haddockid{pure}
  and of either \haddockid{<*>} or \haddockid{liftA2}. If it defines both, then they must behave
  the same as their default definitions:\par
 \haddocktt{(<*>)\ =\ liftA2\ id}
-      \haddocktt{liftA2\ f\ x\ y\ =\ fmap\ f\ x\ <*>\ y}\par
+
+\haddocktt{liftA2\ f\ x\ y\ =\ fmap\ f\ x\ <*>\ y}\par
 Further, any definition must satisfy the following:\par
-\begin{description}
-\item[\emph{identity}] \begin{quote}
-                       {\haddockverb\begin{verbatim}
-                       pure id <*> v = v\end{verbatim}}
-                       \end{quote}
-                       
-\item[\emph{composition}] \begin{quote}
-                          {\haddockverb\begin{verbatim}
-                          pure (.) <*> u <*> v <*> w = u <*> (v <*> w)\end{verbatim}}
-                          \end{quote}
-                          
-\item[\emph{homomorphism}] \begin{quote}
-                           {\haddockverb\begin{verbatim}
-                           pure f <*> pure x = pure (f x)\end{verbatim}}
-                           \end{quote}
-                           
-\item[\emph{interchange}] \begin{quote}
-                          {\haddockverb\begin{verbatim}
-                          u <*> pure y = pure ({\char '44} y) <*> u\end{verbatim}}
-                          \end{quote}
-                          
-\end{description}The other methods have the following default definitions, which may
+\begin{tabular}{lp{8cm}}
+\emph{identity}
+      & \begin{quote}
+        {\haddockverb\begin{verbatim}
+        pure id <*> v == v\end{verbatim}}
+        \end{quote} \\
+
+\emph{composition}
+      & \begin{quote}
+        {\haddockverb\begin{verbatim}
+        pure (.) <*> u <*> v <*> w == u <*> (v <*> w)\end{verbatim}}
+        \end{quote} \\
+
+\emph{homomorphism}
+      & \begin{quote}
+        {\haddockverb\begin{verbatim}
+        pure f <*> pure x == pure (f x)\end{verbatim}}
+        \end{quote} \\
+
+\emph{interchange}
+      & \begin{quote}
+        {\haddockverb\begin{verbatim}
+        u <*> pure y == pure ($ y) <*> u\end{verbatim}}
+        \end{quote}
+\end{tabular}
+
+The other methods have the following default definitions, which may
  be overridden with equivalent specialized implementations:\par
                  \begin{itemize}
                  \item
